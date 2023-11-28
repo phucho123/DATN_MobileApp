@@ -1,16 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TouchableOpacity, ImageBackground, Alert } from "react-native";
 import { Camera } from "expo-camera";
+import axios from "axios";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./camera.style";
 
-const MyCamera = () => {
+const MyCamera = ({ onChangeResultAI }) => {
   const [imageUri, setImageUri] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [framePosition, setFramePosition] = useState({ x: 0, y: 0 });
   const cameraRef = useRef(null);
-
-  const [url, setUrl] = useState("");
 
   const handleCameraReady = () => {
     console.log("Camera is ready");
@@ -41,41 +40,30 @@ const MyCamera = () => {
     data.append("upload_preset", "_DemoDetectNumber");
     data.append("cloud_name", "diuws4bmd");
 
-    fetch("https://api.cloudinary.com/v1_1/diuws4bmd/image/upload", {
-      method: "POST",
-      body: data,
+    // CALL API TO SAVE IMAGE TO CLOUDINARY
+    const config = {
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
       },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUrl(data.url);
-      })
-      .catch((err) => Alert.alert("Error while uploading", err));
-  };
-
-  useEffect(() => {
-    const handleGetResult = async (url) => {
-      console.log("url: ", url);
-      fetch("http://192.168.1.11:4000", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: url,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => console.log("data:", data))
-        .catch((err) => console.log("error:", err));
     };
 
-    handleGetResult(url);
-  }, [url]);
+    axios
+      .post("https://api.cloudinary.com/v1_1/diuws4bmd/image/upload", data, config)
+      .then((response) => {
+        getAIDetectResult(response.data.url);
+      })
+      .catch((error) => {
+        Alert.alert("Error while uploading", error.message);
+      });
+  };
+
+  const getAIDetectResult = async (url) => {
+    const data = await axios.post("http://192.168.1.11:8000/", {
+      url: url,
+    });
+    onChangeResultAI(data.data);
+  };
 
   const handleFrameMove = (event) => {
     const { locationX, locationY } = event.nativeEvent;
