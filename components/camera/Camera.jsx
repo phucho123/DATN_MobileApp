@@ -10,6 +10,8 @@ const MyCamera = () => {
   const [framePosition, setFramePosition] = useState({ x: 0, y: 0 });
   const cameraRef = useRef(null);
 
+  const [url, setUrl] = useState("");
+
   const handleCameraReady = () => {
     console.log("Camera is ready");
   };
@@ -49,10 +51,31 @@ const MyCamera = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("data is: ", data);
+        setUrl(data.url);
       })
       .catch((err) => Alert.alert("Error while uploading", err));
   };
+
+  useEffect(() => {
+    const handleGetResult = async (url) => {
+      console.log("url: ", url);
+      fetch("http://192.168.1.11:4000", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: url,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log("data:", data))
+        .catch((err) => console.log("error:", err));
+    };
+
+    handleGetResult(url);
+  }, [url]);
 
   const handleFrameMove = (event) => {
     const { locationX, locationY } = event.nativeEvent;
