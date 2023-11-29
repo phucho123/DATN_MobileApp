@@ -7,26 +7,29 @@ import { useNavigation } from "@react-navigation/native";
 function Home() {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-      <View style={{ padding: 16, display: "flex", alignItems: "center" }}>
-        <Text style={{ fontSize: 20 }}>
-          <Text style={{ color: "red" }}>Protect</Text> Our Water,
+    <SafeAreaView style={styles.wrapper}>
+      <View style={styles.sloganBlock}>
+        <Text style={styles.sloganText}>
+          <Text style={styles.sloganTextRed}>Protect</Text> Our Water,
         </Text>
-        <Text style={{ fontSize: 20 }}>
-          <Text style={{ color: "red" }}>Sustain</Text> Our Future,
+        <Text style={styles.sloganText}>
+          <Text style={styles.sloganTextRed}>Sustain</Text> Our Future,
         </Text>
-        <Text style={{ fontSize: 20, color: "red" }}>Every Drop Matters!</Text>
-        <Image source={require("../../../assets/images/hcmut.png")} style={{ height: 150, width: 150 }} />
+        <Text style={[styles.sloganText, styles.sloganTextRed]}>Every Drop Matters!</Text>
+        <Image
+          source={require("../../../assets/images/hcmut.png")}
+          style={{ height: 150, width: 150, marginLeft: -28 }}
+        />
       </View>
       <View style={styles.container}>
-        <Button text={"Lap Dong Ho Moi"} onPress={() => navigation.navigate("Install New Meter")} />
-        <Button text={"Ghi chi so nuoc"} color={"#0F9C58"} onPress={() => navigation.navigate("Qr Scanner")} />
-        {/* <Button text={"Ghi chi so nuoc"} color={"#0F9C58"} onPress={() => navigation.navigate("Update Meter")} /> */}
+        <Button text={"Lắp đồng hồ mới"} onPress={() => navigation.navigate("Install New Meter")} />
+        <Button text={"Ghi chỉ số nước"} color={"#0F9C58"} onPress={() => navigation.navigate("Qr Scanner")} />
         <Button
-          text={"Cap nhat thong tin"}
+          text={"Cập nhật thông tin"}
           color={"#F4B400"}
           onPress={() => navigation.navigate("Update Information")}
         />
+        <Image source={require("../../../assets/images/logo.png")} style={{ height: 150, width: 150 }} />
       </View>
     </SafeAreaView>
   );

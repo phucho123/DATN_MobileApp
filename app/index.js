@@ -4,7 +4,6 @@ import UpdateMeter from "./screen/updatemeter/UpdateMeter";
 import QrScanner from "./screen/qrscanner/QrScanner";
 import UpdateInfo from "./screen/updateinfo/UpdateInfo";
 import InstallMeter from "./screen/installmeter/InstallMeter";
-import { Text } from "react-native";
 
 const Stack = createStackNavigator();
 

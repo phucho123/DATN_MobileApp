@@ -5,7 +5,8 @@ import axios from "axios";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./camera.style";
 
-const MyCamera = ({ onChangeResultAI }) => {
+const MyCamera = ({ onChangeResultAI, displayResult }) => {
+  const [isDisplayBtn, setIsDisplayBtn] = useState(true);
   const [imageUri, setImageUri] = useState(null);
   const [hasCameraPermission, setHasCameraPermission] = useState();
   const [framePosition, setFramePosition] = useState({ x: 0, y: 0 });
@@ -59,10 +60,12 @@ const MyCamera = ({ onChangeResultAI }) => {
   };
 
   const getAIDetectResult = async (url) => {
-    const data = await axios.post("http://192.168.1.11:8000/", {
+    const data = await axios.post("http://192.168.77.123:8000/", {
       url: url,
     });
     onChangeResultAI(data.data);
+    displayResult();
+    setIsDisplayBtn(false);
   };
 
   const handleFrameMove = (event) => {
@@ -107,11 +110,13 @@ const MyCamera = ({ onChangeResultAI }) => {
           </View>
         </ImageBackground>
       </Camera>
-      <View style={styles.action}>
-        <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
-          <Text style={styles.buttonText}>CHỤP ẢNH</Text>
-        </TouchableOpacity>
-      </View>
+      {isDisplayBtn && (
+        <View style={styles.action}>
+          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+            <Text style={styles.buttonText}>CHỤP ẢNH</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

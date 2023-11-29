@@ -21,8 +21,6 @@ const styles = StyleSheet.create({
   frame: {
     width: 380,
     height: 380,
-    borderWidth: 2,
-    borderColor: "white",
     position: "absolute",
   },
   smallFrameGroup: {
@@ -34,12 +32,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: -200,
     gap: 6,
-  },
-  smallFrame: {
-    width: 45,
-    height: 45,
-    borderWidth: 1,
-    borderColor: "white",
   },
   action: {
     display: "flex",
