@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import MyCamera from "../../../components/camera/Camera";
 import styles from "./updatemeter.style";
-import InfoUser from "../../../components/inforUser/InfoUser";
+import InfoUser from "../../../components/infoUser/InfoUser";
 
 const UpdateMeter = () => {
   const [isDisplayResult, setIsDisplayResult] = useState(false);

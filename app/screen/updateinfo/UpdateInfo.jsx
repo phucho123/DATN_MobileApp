@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./updateInfo.style";
 import { View, SafeAreaView, Text, TouchableOpacity } from "react-native";
-import InfoUser from "../../../components/inforUser/InfoUser";
 import { Image } from "react-native";
+import InfoUser from "../../../components/infoUser/InfoUser";
 
 function UpdateInfo() {
   const [activeImg, setActiveImg] = useState(1);

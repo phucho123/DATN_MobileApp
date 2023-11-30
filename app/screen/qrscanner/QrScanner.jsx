@@ -22,11 +22,11 @@ function QrScanner() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     console.log("data: ", data);
-    setModalContent({ type, data });
-    setIsOpenModal(true);
+    // setModalContent({ type, data });
+    // setIsOpenModal(true);
     // Linking.openURL(data);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    // navigation.navigate("Update Meter", { data: data });
+    navigation.navigate("Update Meter", { data: data });
   };
 
   if (hasPermission === null) {
