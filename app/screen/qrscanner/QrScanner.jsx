@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Linking, Modal } from "react-native";
+import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
 
-function QrScanner() {
+function QrScanner({ route }) {
+  const { typeAction } = route.params;
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [modalContent, setModalContent] = useState({ type: "", content: "" });
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -21,12 +20,25 @@ function QrScanner() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    console.log("data: ", data);
     // setModalContent({ type, data });
     // setIsOpenModal(true);
     // Linking.openURL(data);
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    navigation.navigate("Update Meter", { data: data });
+
+    switch (typeAction) {
+      case "installMeter":
+        navigation.navigate("Install New Meter", { id: data });
+        break;
+      case "updateMeter":
+        navigation.navigate("Update Meter", { id: data });
+        break;
+      case "updateInfo":
+        navigation.navigate("Update Information", { id: data });
+        break;
+      default:
+        navigation.navigate("Home");
+        break;
+    }
   };
 
   if (hasPermission === null) {
@@ -48,7 +60,7 @@ function QrScanner() {
         </View>
       )}
 
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={isOpenModal}
@@ -59,7 +71,7 @@ function QrScanner() {
       >
         <Text>{modalContent.type}</Text>
         <Text>{modalContent.content}</Text>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }

@@ -1,12 +1,25 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const CustomInput = ({ containerStyle, placeholder, onChangeText, error, ...props }) => {
+const CustomInput = ({
+  containerStyle,
+  placeholder,
+  onChangeText,
+  defaultValue,
+  isOnlySeen,
+  inputType,
+  error,
+  ...props
+}) => {
   const [isFocused, setIsFocused] = useState(false);
-  const [text, setText] = useState("");
+  const [text, setText] = useState(defaultValue);
   const [showPassword, setShowPassword] = useState(props.secureTextEntry);
   const labelPosition = useRef(new Animated.Value(text ? 1 : 0)).current;
+
+  useEffect(() => {
+    setText(defaultValue || ""); // Update text state when defaultValue changes
+  }, [defaultValue]);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -17,6 +30,17 @@ const CustomInput = ({ containerStyle, placeholder, onChangeText, error, ...prop
     setIsFocused(false);
     if (!text) {
       animatedLabel(0);
+    }
+  };
+
+  const getInputType = () => {
+    switch (inputType) {
+      case "text":
+        return "default";
+      case "number":
+        return "numeric";
+      default:
+        return "default";
     }
   };
 
@@ -62,11 +86,16 @@ const CustomInput = ({ containerStyle, placeholder, onChangeText, error, ...prop
     borderColor: isFocused ? "#4285F4" : "#EEE",
   };
 
+  const inputDisabledStyle = {
+    backgroundColor: isOnlySeen ? "#E0E8F7" : "",
+    color: isOnlySeen ? "#FFF" : "#333",
+  };
+
   return (
     <View style={containerStyle}>
       <View style={[styles.innerContainer, error && { borderColor: "red" }]}>
         <Animated.Text style={[styles.label, labelStyle]}>{placeholder}</Animated.Text>
-        <View style={[styles.inputContainer, inputFocusStyle]}>
+        <View style={[styles.inputContainer, inputFocusStyle, inputDisabledStyle]}>
           <TextInput
             {...props}
             style={styles.input}
@@ -74,9 +103,11 @@ const CustomInput = ({ containerStyle, placeholder, onChangeText, error, ...prop
             onBlur={handleBlur}
             onChangeText={handleTextChange}
             value={text}
+            keyboardType={getInputType()}
             textAlignVertical="center"
             textContentType={props.secureTextEntry ? "newPassword" : props.secureTextEntry}
             secureTextEntry={showPassword}
+            editable={!isOnlySeen}
           />
           {props.secureTextEntry && !!text && (
             <View>
@@ -104,6 +135,7 @@ const styles = StyleSheet.create({
   label: {
     position: "absolute",
     color: "gray",
+    zIndex: 2,
   },
   inputContainer: {
     flexDirection: "row",

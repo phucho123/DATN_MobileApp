@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
-    width: "120",
+    width: 120,
     alignItems: "center",
     position: "absolute",
     zIndex: 10,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   locationCoordItem: {
-    fontWeight: 400,
+    fontWeight: "400",
   },
   //   ACTION
   actions: {

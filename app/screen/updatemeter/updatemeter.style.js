@@ -67,11 +67,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  updateBtn: {
+    height: 40,
+    width: 120,
+    borderRadius: 4,
+    backgroundColor: "#F4B301",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   cancelText: {
     color: "#333",
     fontWeight: "bold",
   },
   confirmText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  updateText: {
     color: "#fff",
     fontWeight: "bold",
   },
