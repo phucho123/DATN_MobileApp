@@ -3,48 +3,54 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
-  title: {
-    fontSize: 28,
+  objectTitle: {
+    marginVertical: 12,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#4285F4",
-    textAlign: "center",
-    marginBottom: 14,
   },
-  resultGroup: {
-    marginTop: 20,
-    flexDirection: "row",
+  //   INFO
+  // TYPE
+  typeItem: {
+    width: 180,
+    height: 180,
+    borderWidth: 1,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  titleWaterMeter: {
+    backgroundColor: "#FFF",
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    width: 120,
+    alignItems: "center",
+    position: "absolute",
+    zIndex: 10,
+    top: "-10%",
+  },
+  //   MAP
+  locationCoordBox: {
+    borderColor: "#4285F4",
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 8,
     gap: 12,
   },
-  resultItem: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E0E8F7",
-    borderWidth: 4,
-    borderColor: "#4285F4",
-    borderRadius: 999,
-    padding: 12,
-    minWidth: 180,
-    minHeight: 180,
-  },
-  resultTitle: {
+  locationCoord: {
+    fontSize: 16,
     fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 8,
   },
-  resultUnit: {
-    fontWeight: "bold",
-    fontSize: 20,
-    marginTop: 8,
+  locationCoordItem: {
+    fontWeight: "400",
   },
-  result: {
-    fontWeight: "bold",
-    fontSize: 28,
-    color: "#DB4437",
-  },
+  //   ACTION
   actions: {
+    paddingBottom: 60,
     marginTop: 12,
     marginRight: 27,
     flexDirection: "row",
@@ -59,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  confirmBtn: {
+  createBtn: {
     height: 40,
     width: 120,
     borderRadius: 4,
@@ -67,23 +73,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  updateBtn: {
-    height: 40,
-    width: 120,
-    borderRadius: 4,
-    backgroundColor: "#F4B301",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   cancelText: {
     color: "#333",
     fontWeight: "bold",
   },
-  confirmText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  updateText: {
+  createText: {
     color: "#fff",
     fontWeight: "bold",
   },
