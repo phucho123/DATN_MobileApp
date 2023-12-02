@@ -8,40 +8,64 @@ import axios from "axios";
 import Toast from "../../../components/toast/Toast";
 
 function UpdateInfo({ route }) {
-  const { id } = route.params;
+  const { id, waterMeter } = route.params;
   const navigation = useNavigation();
-  const [address, setAddress] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [status, setStatus] = useState(1);
+  const [address, setAddress] = useState(waterMeter.address);
+  const [fullName, setFullName] = useState(waterMeter.fullName);
+  const [email, setEmail] = useState(waterMeter.email);
+  const [phoneNumber, setPhoneNumber] = useState(waterMeter.phoneNumber);
+  const [status, setStatus] = useState(waterMeter.status);
+  const [errorInput, setErrorInput] = useState({
+    email: "",
+    fullName: "",
+    phoneNumber: "",
+  });
 
   const toastRef = useRef();
 
-  const showToast = (content, type, delay) => {
+  const showToast = (content, type, delay, redirectTo) => {
     if (toastRef.current) {
       toastRef.current.hide(() => {
-        toastRef.current.show(content, type, delay);
+        toastRef.current.show(content, type, delay, redirectTo);
       });
     }
   };
 
+  const validateInput = () => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+
+    const isValidEmail = emailRegex.test(email);
+    const isValidFullName = fullName.trim() !== "";
+    const isValidPhoneNumber = phoneNumber.trim() !== "";
+
+    let newErrorInput = { email: "", fullName: "", phoneNumber: "" };
+
+    if (!isValidEmail) newErrorInput = { ...newErrorInput, email: "Email không hợp lệ" };
+    if (!isValidFullName) newErrorInput = { ...newErrorInput, fullName: "Tên không được bỏ trống" };
+    if (!isValidPhoneNumber) newErrorInput = { ...newErrorInput, phoneNumber: "Số điện thoại không được bỏ trống" };
+
+    setErrorInput(newErrorInput);
+
+    return isValidEmail && isValidPhoneNumber && isValidFullName;
+  };
+
   const handleUpdateInfo = async () => {
-    const data = {
-      waterMeterId: id,
-      address: address,
-      email: email,
-      fullName: fullName,
-      phoneNumber: phoneNumber.toString(),
-      status: status,
-    };
+    if (validateInput()) {
+      const data = {
+        waterMeterId: id,
+        status: status,
+        fullName: fullName,
+        email: email,
+        phoneNumber: phoneNumber.toString(),
+      };
 
-    const response = await axios.post("http://192.168.1.4:8000/user/update-info", data);
+      const response = await axios.post("http://192.168.1.5:8080/water-meter/update-info", data);
 
-    if (response.status === 200) {
-      showToast("Cập nhật thông tin thành công", "success", 200);
-    } else {
-      showToast("Cập nhật thông tin thất bại", "error", 200);
+      if (response.status === 200) {
+        showToast("Cập nhật thông tin thành công", "success", 200, "Trang chủ");
+      } else {
+        showToast("Cập nhật thông tin thất bại", "error", 200);
+      }
     }
   };
 
@@ -60,7 +84,6 @@ function UpdateInfo({ route }) {
               </View>
               <CustomInput
                 containerStyle={{ marginVertical: 4 }}
-                placeholder={"ID:"}
                 onChangeText={setAddress}
                 defaultValue={id}
                 isOnlySeen={true}
@@ -74,7 +97,6 @@ function UpdateInfo({ route }) {
               </View>
               <CustomInput
                 containerStyle={{ marginVertical: 4 }}
-                placeholder={"Địa chỉ:"}
                 onChangeText={setAddress}
                 defaultValue={address}
                 isOnlySeen={true}
@@ -88,9 +110,9 @@ function UpdateInfo({ route }) {
               </View>
               <CustomInput
                 containerStyle={{ marginVertical: 4 }}
-                placeholder={"Email:"}
                 onChangeText={setEmail}
                 defaultValue={email}
+                error={errorInput.email}
               />
             </View>
             {/* FULLNAME */}
@@ -101,9 +123,9 @@ function UpdateInfo({ route }) {
               </View>
               <CustomInput
                 containerStyle={{ marginVertical: 4 }}
-                placeholder={"Nhập tên hộ dân"}
                 onChangeText={setFullName}
                 defaultValue={fullName}
+                error={errorInput.fullName}
               />
             </View>
             {/* PHONE NUMBER */}
@@ -114,9 +136,9 @@ function UpdateInfo({ route }) {
               </View>
               <CustomInput
                 containerStyle={{ marginVertical: 4 }}
-                placeholder={"Nhập số điện thoại"}
                 onChangeText={setPhoneNumber}
                 defaultValue={phoneNumber}
+                error={errorInput.phoneNumber}
               />
             </View>
             {/* STATUS */}
@@ -129,10 +151,10 @@ function UpdateInfo({ route }) {
                 <TouchableOpacity onPress={() => setStatus(1)}>
                   <View
                     style={{
-                      backgroundColor: status === 1 ? "#40FBA1" : "#EEE",
+                      backgroundColor: status === true ? "#40FBA1" : "#EEE",
                       borderWidth: 1,
                       borderRadius: 8,
-                      borderColor: status === 1 ? "green" : "gray",
+                      borderColor: status === true ? "green" : "gray",
                       padding: 12,
                       alignItems: "center",
                     }}
@@ -144,10 +166,10 @@ function UpdateInfo({ route }) {
                 <TouchableOpacity onPress={() => setStatus(0)}>
                   <View
                     style={{
-                      backgroundColor: status === 0 ? "#EC9B97" : "#EEE",
+                      backgroundColor: status === false ? "#EC9B97" : "#EEE",
                       borderWidth: 1,
                       borderRadius: 8,
-                      borderColor: status === 0 ? "red" : "gray",
+                      borderColor: status === false ? "red" : "gray",
                       padding: 12,
                       alignItems: "center",
                     }}
@@ -161,10 +183,10 @@ function UpdateInfo({ route }) {
           </View>
           {/* //////////////// */}
           <View style={styles.actions}>
-            <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.navigate("Trang chủ")}>
               <Text style={styles.cancelText}>HỦY</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.createBtn} onPress={() => handleUpdateInfo()}>
+            <TouchableOpacity style={styles.createBtn} onPress={handleUpdateInfo}>
               <Text style={styles.createText}>CẬP NHẬT</Text>
             </TouchableOpacity>
           </View>

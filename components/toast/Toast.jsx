@@ -19,6 +19,7 @@ const Toast = React.forwardRef(({ duration = 400, onHide }, ref) => {
     text: undefined,
     type: undefined,
     duration: 0,
+    redirectTo: "",
   });
 
   const navigation = useNavigation();
@@ -39,7 +40,9 @@ const Toast = React.forwardRef(({ duration = 400, onHide }, ref) => {
       showToast();
       timer.current = setTimeout(() => {
         hideToast();
-        navigation.navigate("Home");
+        if (config.redirectTo) {
+          navigation.navigate(config.redirectTo);
+        }
       }, 2000);
     }
 
@@ -94,8 +97,8 @@ const Toast = React.forwardRef(({ duration = 400, onHide }, ref) => {
     </Animated.View>
   );
 
-  function show(text, type, duration) {
-    setConfig({ text, type, duration });
+  function show(text, type, duration, redirectTo) {
+    setConfig({ text, type, duration, redirectTo });
   }
 
   function hide(callback) {
@@ -177,7 +180,8 @@ const styles = StyleSheet.create({
   container: {
     position: "absolute",
     top: -20,
-    left: "20%",
+    left: "5%",
+    width: "90%",
     zIndex: 100,
   },
   outerContainer: {

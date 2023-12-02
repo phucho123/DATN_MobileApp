@@ -19,11 +19,11 @@ export default function App() {
         headerStatusBarHeight: 0,
       }}
     >
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <Stack.Screen name="Qr Scanner" component={QrScanner} />
-      <Stack.Screen name="Update Meter" component={UpdateMeter} />
-      <Stack.Screen name="Update Information" component={UpdateInfo} />
-      <Stack.Screen name="Install New Meter" component={InstallMeter} />
+      <Stack.Screen name="Trang chủ" component={Home} options={{ headerShown: false }} />
+      <Stack.Screen name="Quét mã QR" component={QrScanner} />
+      <Stack.Screen name="Ghi chỉ số nước" component={UpdateMeter} />
+      <Stack.Screen name="Cập nhật thông tin" component={UpdateInfo} />
+      <Stack.Screen name="Lắp đồng hồ mới" component={InstallMeter} />
     </Stack.Navigator>
   );
 }

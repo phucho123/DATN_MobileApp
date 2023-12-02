@@ -26,17 +26,17 @@ function Home() {
         <View style={styles.container}>
           <Button
             text={"Lắp đồng hồ mới"}
-            onPress={() => navigation.navigate("Qr Scanner", { typeAction: "installMeter" })}
+            onPress={() => navigation.navigate("Quét mã QR", { typeAction: "installMeter" })}
           />
           <Button
             text={"Ghi chỉ số nước"}
             color={"#0F9C58"}
-            onPress={() => navigation.navigate("Qr Scanner", { typeAction: "updateMeter" })}
+            onPress={() => navigation.navigate("Quét mã QR", { typeAction: "updateMeter" })}
           />
           <Button
             text={"Cập nhật thông tin"}
             color={"#F4B400"}
-            onPress={() => navigation.navigate("Qr Scanner", { typeAction: "updateInfo" })}
+            onPress={() => navigation.navigate("Quét mã QR", { typeAction: "updateInfo" })}
           />
           <Image source={require("../../../assets/images/logo.png")} style={{ height: 150, width: 150 }} />
         </View>

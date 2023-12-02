@@ -61,7 +61,7 @@ const MyCamera = ({ onChangeResultAI, displayResult }) => {
   };
 
   const getAIDetectResult = async (url) => {
-    const data = await axios.post("http://192.168.1.4:8000/", {
+    const data = await axios.post("http://192.168.1.5:8000/", {
       url: url,
     });
     onChangeResultAI(data.data, url);

@@ -91,14 +91,29 @@ const CustomInput = ({
     color: isOnlySeen ? "#FFF" : "#333",
   };
 
+  const inputStyle = {
+    flex: 1,
+    fontSize: 16,
+    height: 50,
+    marginTop: placeholder ? 10 : 0,
+    paddingLeft: 10,
+  };
+
   return (
     <View style={containerStyle}>
-      <View style={[styles.innerContainer, error && { borderColor: "red" }]}>
+      <View style={[styles.innerContainer]}>
         <Animated.Text style={[styles.label, labelStyle]}>{placeholder}</Animated.Text>
-        <View style={[styles.inputContainer, inputFocusStyle, inputDisabledStyle]}>
+        <View
+          style={[
+            styles.inputContainer,
+            inputFocusStyle,
+            inputDisabledStyle,
+            error && { borderWidth: 1, borderColor: "red" },
+          ]}
+        >
           <TextInput
             {...props}
-            style={styles.input}
+            style={inputStyle}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChangeText={handleTextChange}
@@ -141,13 +156,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    height: 50,
-    marginTop: 10,
-    paddingLeft: 10,
   },
   errorText: {
     marginTop: 5,

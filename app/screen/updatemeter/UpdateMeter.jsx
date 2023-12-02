@@ -9,7 +9,7 @@ import ModalComp from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 
 const UpdateMeter = ({ route }) => {
-  const { id } = route.params;
+  const { id, waterMeter } = route.params;
   const navigation = useNavigation();
   const [isDisplayResult, setIsDisplayResult] = useState(false);
   const [isDisplayModal, setIsDisplayModal] = useState(false);
@@ -69,7 +69,7 @@ const UpdateMeter = ({ route }) => {
       <Toast ref={toastRef} />
       <View style={styles.container}>
         <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
-          <InfoUser id={id} />
+          <InfoUser id={id} data={waterMeter} />
 
           <View>
             <MyCamera onChangeResultAI={handleGetResultFromAI} displayResult={displayResult} />
@@ -89,7 +89,7 @@ const UpdateMeter = ({ route }) => {
                   </View>
                 </View>
                 <View style={styles.actions}>
-                  <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.navigate("Home")}>
+                  <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.navigate("Trang chủ")}>
                     <Text style={styles.cancelText}>HỦY</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.updateBtn} onPress={() => setIsDisplayModal(true)}>

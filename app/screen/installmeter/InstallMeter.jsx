@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./installMeter.style";
+import { useNavigation } from "@react-navigation/native";
 import { View, SafeAreaView, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -11,6 +12,7 @@ import axios from "axios";
 
 function InstallMeter({ route }) {
   const { id } = route.params;
+  const navigation = useNavigation();
   const [address, setAddress] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,6 +20,12 @@ function InstallMeter({ route }) {
   const [typeWaterMeter, setTypeWaterMeter] = useState(1);
   const [location, setLocation] = useState();
   const [errorMsg, setErrorMsg] = useState(null);
+  const [errorInput, setErrorInput] = useState({
+    address: "",
+    email: "",
+    fullName: "",
+    phoneNumber: "",
+  });
 
   const toastRef = useRef();
 
@@ -34,33 +42,61 @@ function InstallMeter({ route }) {
     })();
   }, []);
 
-  const showToast = (content, type, delay) => {
+  const showToast = (content, type, delay, redirectTo) => {
     if (toastRef.current) {
       toastRef.current.hide(() => {
-        toastRef.current.show(content, type, delay);
+        toastRef.current.show(content, type, delay, redirectTo);
       });
     }
   };
 
+  const validateInput = () => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+
+    const isValidAddress = address.trim() !== "";
+    const isValidEmail = emailRegex.test(email);
+    const isValidFullName = fullName.trim() !== "";
+    const isValidPhoneNumber = phoneNumber.trim() !== "";
+
+    let newErrorInput = { address: "", email: "", fullName: "", phoneNumber: "" };
+
+    if (!isValidAddress) newErrorInput = { ...newErrorInput, address: "Địa chỉ không được bỏ trống" };
+    if (!isValidEmail) newErrorInput = { ...newErrorInput, email: "Email không hợp lệ" };
+    if (!isValidFullName) newErrorInput = { ...newErrorInput, fullName: "Tên không được bỏ trống" };
+    if (!isValidPhoneNumber) newErrorInput = { ...newErrorInput, phoneNumber: "Số điện thoại không được bỏ trống" };
+
+    setErrorInput(newErrorInput);
+
+    return isValidAddress && isValidEmail && isValidPhoneNumber && isValidFullName;
+  };
+
   const handleCreateNewMeter = async () => {
-    const data = {
-      waterMeterId: id,
-      type: typeWaterMeter === 1 ? "mechanical" : "pulse",
-      address: address,
-      longitude: location.coords.longitude,
-      latitude: location.coords.latitude,
-      email: email,
-      fullName: fullName,
-      phoneNumber: phoneNumber.toString(),
-    };
+    if (validateInput()) {
+      const data = {
+        waterMeterId: id,
+        type: typeWaterMeter === 1 ? "mechanical" : "pulse",
+        address: address,
+        longitude: location.coords.longitude,
+        latitude: location.coords.latitude,
+        email: email,
+        fullName: fullName,
+        phoneNumber: phoneNumber.toString(),
+      };
 
-    console.log("data is: ", data);
-    const response = await axios.post("http://192.168.1.4:8080/water-meter/create", data);
+      try {
+        const response = await axios.post("http://192.168.1.5:8080/water-meter/create", data);
 
-    if (response.status === 200) {
-      showToast("Tạo đồng hồ thành công", "success", 200);
-    } else {
-      showToast("Tạo đồng hồ thất bại", "error", 200);
+        if (response.status === 200) {
+          showToast("Tạo đồng hồ thành công", "success", 200, "Trang chủ");
+        }
+      } catch (error) {
+        console.log("error", error);
+        if (axios.isAxiosError(error) && error.response) {
+          showToast(error.response.data.message, "error", 200, "Trang chủ");
+        } else {
+          console.log(error);
+        }
+      }
     }
   };
 
@@ -85,14 +121,30 @@ function InstallMeter({ route }) {
             </Text>
           </View>
           <View style={{ backgroundColor: "#FFFFFF", paddingHorizontal: 20 }}>
-            <CustomInput containerStyle={{ marginVertical: 4 }} placeholder={"Địa chỉ"} onChangeText={setAddress} />
-            <CustomInput containerStyle={{ marginVertical: 4 }} placeholder={"Tên hộ dân"} onChangeText={setFullName} />
-            <CustomInput containerStyle={{ marginVertical: 4 }} placeholder={"Email"} onChangeText={setEmail} />
+            <CustomInput
+              containerStyle={{ marginVertical: 4 }}
+              placeholder={"Địa chỉ"}
+              onChangeText={setAddress}
+              error={errorInput.address}
+            />
+            <CustomInput
+              containerStyle={{ marginVertical: 4 }}
+              placeholder={"Tên hộ dân"}
+              onChangeText={setFullName}
+              error={errorInput.fullName}
+            />
+            <CustomInput
+              containerStyle={{ marginVertical: 4 }}
+              placeholder={"Email"}
+              onChangeText={setEmail}
+              error={errorInput.email}
+            />
             <CustomInput
               containerStyle={{ marginVertical: 4 }}
               placeholder={"Số điện thoại"}
               inputType={"number"}
               onChangeText={setPhoneNumber}
+              error={errorInput.phoneNumber}
             />
           </View>
           {/* TYPE */}
@@ -190,7 +242,7 @@ function InstallMeter({ route }) {
           </View>
 
           <View style={styles.actions}>
-            <TouchableOpacity style={styles.cancelBtn}>
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.navigate("Trang chủ")}>
               <Text style={styles.cancelText}>HỦY</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.createBtn} onPress={() => handleCreateNewMeter()}>
