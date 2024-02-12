@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import styles from "./installMeter.style";
 import { useNavigation } from "@react-navigation/native";
 import { View, SafeAreaView, Text, TouchableOpacity, ScrollView, Image } from "react-native";
@@ -9,6 +9,8 @@ import CustomInput from "../../../components/customInput/CustomInput";
 import Loading from "../../../components/loading/Loading";
 import Toast from "../../../components/toast/Toast";
 import axios from "axios";
+import { SERVER_URL } from "../../../secrete";
+import AuthenticationAPI from "../../context/authContext";
 
 function InstallMeter({ route }) {
   const { id } = route.params;
@@ -28,6 +30,7 @@ function InstallMeter({ route }) {
   });
 
   const toastRef = useRef();
+  const { accessToken } = useContext(AuthenticationAPI);
 
   useEffect(() => {
     (async () => {
@@ -84,7 +87,11 @@ function InstallMeter({ route }) {
       };
 
       try {
-        const response = await axios.post("http://192.168.1.5:8080/water-meter/create", data);
+        const response = await axios.post(`${SERVER_URL}/water-meter/create`, data, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (response.status === 200) {
           showToast("Tạo đồng hồ thành công", "success", 200, "Trang chủ");

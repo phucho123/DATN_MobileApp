@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "../../../components/toast/Toast";
 
 import axios from "axios";
+import { SERVER_URL } from "../../../secrete";
+import AuthenticationAPI from "../../context/authContext";
 
 function QrScanner({ route }) {
   const { typeAction } = route.params;
@@ -22,6 +24,7 @@ function QrScanner({ route }) {
     getBarCodeScannerPermissions();
   }, []);
 
+  const { accessToken } = useContext(AuthenticationAPI);
   const toastRef = useRef();
 
   const showToast = (content, type, delay, redirectTo) => {
@@ -38,7 +41,11 @@ function QrScanner({ route }) {
       navigation.navigate("Lắp đồng hồ mới", { id: data });
     } else {
       try {
-        const dataResponse = await axios.get(`http://192.168.1.5:8080/water-meter/by-id?waterMeterId=${data}`);
+        const dataResponse = await axios.get(`${SERVER_URL}/water-meter/by-id?waterMeterId=${data}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (dataResponse.status === 200) {
           const waterMeterData = {

@@ -4,6 +4,7 @@ import { Camera } from "expo-camera";
 import axios from "axios";
 import * as ImageManipulator from "expo-image-manipulator";
 import styles from "./camera.style";
+import { SERVER_AI_URL } from "../../secrete";
 
 const MyCamera = ({ onChangeResultAI, displayResult }) => {
   const [isDisplayBtn, setIsDisplayBtn] = useState(true);
@@ -61,7 +62,7 @@ const MyCamera = ({ onChangeResultAI, displayResult }) => {
   };
 
   const getAIDetectResult = async (url) => {
-    const data = await axios.post("http://192.168.1.5:8000/", {
+    const data = await axios.post(`${SERVER_AI_URL}`, {
       url: url,
     });
     onChangeResultAI(data.data, url);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Image, Text, View, SafeAreaView } from "react-native";
 import Button from "../../../components/button/Button";
 import styles from "./home.style";

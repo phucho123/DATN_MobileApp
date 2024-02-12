@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Modal } from "react-native";
 import MyCamera from "../../../components/camera/Camera";
 import styles from "./updatemeter.style";
@@ -7,6 +7,8 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import ModalComp from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
+import { SERVER_URL } from "../../../secrete";
+import AuthenticationAPI from "../../context/authContext";
 
 const UpdateMeter = ({ route }) => {
   const { id, waterMeter } = route.params;
@@ -16,6 +18,8 @@ const UpdateMeter = ({ route }) => {
   const [resultOfAI, setResultOfAI] = useState(0);
   const [confirmResult, setconfirmResult] = useState(0);
   const [url, setUrl] = useState("");
+
+  const { accessToken } = useContext(AuthenticationAPI);
 
   const toastRef = useRef();
 
@@ -43,15 +47,18 @@ const UpdateMeter = ({ route }) => {
     setIsDisplayModal(false);
   };
 
-  const handleUpdateWaterMeter = () => {
+  const handleUpdateWaterMeter = async () => {
     const data = {
       waterMeterId: id,
       totalRateValue: confirmResult,
       imageUrl: url,
     };
 
-    console.log(data);
-    const response = axios.post("http://192.168.1.11:8080/water-meter/save-digital-value", data);
+    const response = await axios.post(`${SERVER_URL}water-meter/save-digital-value`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     if (response.status === 200) {
       showToast("Ghi chỉ số nước thành công", "success", 200);

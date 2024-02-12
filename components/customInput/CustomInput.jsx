@@ -108,7 +108,7 @@ const CustomInput = ({
             styles.inputContainer,
             inputFocusStyle,
             inputDisabledStyle,
-            error && { borderWidth: 1, borderColor: "red" },
+            error ? { borderWidth: 1, borderColor: "red" } : { borderWidth: 1, borderColor: "#4285F4" },
           ]}
         >
           <TextInput

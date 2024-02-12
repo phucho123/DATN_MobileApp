@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import styles from "./updateInfo.style";
 import { View, SafeAreaView, Text, TouchableOpacity, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -6,6 +6,8 @@ import CustomInput from "../../../components/customInput/CustomInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Toast from "../../../components/toast/Toast";
+import { SERVER_URL } from "../../../secrete";
+import AuthenticationAPI from "../../context/authContext";
 
 function UpdateInfo({ route }) {
   const { id, waterMeter } = route.params;
@@ -20,6 +22,8 @@ function UpdateInfo({ route }) {
     fullName: "",
     phoneNumber: "",
   });
+
+  const { accessToken } = useContext(AuthenticationAPI);
 
   const toastRef = useRef();
 
@@ -59,7 +63,11 @@ function UpdateInfo({ route }) {
         phoneNumber: phoneNumber.toString(),
       };
 
-      const response = await axios.post("http://192.168.1.5:8080/water-meter/update-info", data);
+      const response = await axios.post(`${SERVER_URL}/water-meter/update-info`, data, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       if (response.status === 200) {
         showToast("Cập nhật thông tin thành công", "success", 200, "Trang chủ");
